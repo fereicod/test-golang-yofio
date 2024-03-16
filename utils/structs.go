@@ -2,11 +2,11 @@ package utils
 
 import "strconv"
 
-type Assigner struct {
-	Investment int
+type InvestmentReq struct {
+	Amount int `json:"investment"`
 }
 
-func (a Assigner) CreditAssigner(investment int32) (int32, int32, int32, error) {
+func (i InvestmentReq) CreditAssigner(investment int32) (int32, int32, int32, error) {
 	var err GeneralError
 
 	CalculateAmounts(int(investment))
@@ -20,4 +20,10 @@ func (a Assigner) CreditAssigner(investment int32) (int32, int32, int32, error) 
 	}
 	return CountAmount[300], CountAmount[500], CountAmount[700], nil
 
+}
+
+type InvestmentJSON struct {
+	Amount_300 int `json:"credit_type_300"`
+	Amount_500 int `json:"credit_type_500"`
+	Amount_700 int `json:"credit_type_700"`
 }

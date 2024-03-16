@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
+	"github.com/fereicod/test-golang-yofio/rest"
 	"github.com/fereicod/test-golang-yofio/utils"
 )
 
@@ -17,22 +19,11 @@ func init() {
 
 func main() {
 
-	for {
-		fmt.Print("Ingrese su inversion: ")
-		fmt.Scan(&utils.Investment)
+	http.HandleFunc("/credit-assignment", func(w http.ResponseWriter, r *http.Request) {
+		rest.HandleInvestment(w, r)
+	})
 
-		_, error := utils.ValidateInvestment(utils.Investment)
-
-		if error != nil {
-			fmt.Println(error.Error())
-		} else {
-			break
-		}
-
-	}
-	utils.PrintDivider()
-	assigner := utils.Assigner{}
-	amount_300, amount_500, amount_700, err := assigner.CreditAssigner(int32(utils.Investment))
-	fmt.Println(amount_300, amount_500, amount_700, err)
+	println("Server listening on port" + utils.SERVER_PORT + " ...")
+	http.ListenAndServe(utils.SERVER_PORT, nil)
 
 }
