@@ -59,6 +59,11 @@ func incrProportional(amount int) {
 	CountAmount[int32(amount)] += 1
 }
 
+func CleanProcess() {
+	Investment = 0
+	CountAmount = map[int32]int32{}
+}
+
 func PrintDivider() {
 	fmt.Println("-----------------------------------")
 }

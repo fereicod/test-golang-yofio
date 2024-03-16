@@ -2,22 +2,37 @@ package utils
 
 import "strconv"
 
-func ValidateInvestment(investment int) (bool, error) {
+func ValidateInvestment(investment interface{}) (bool, error) {
 	var err GeneralError
-	var is_validate bool = true
+	var isValidate bool = true
 
-	is_multiple, _, _ := isMulti(investment, 100)
-	if !is_multiple || investment < Minimum {
-		is_validate = false
-		if investment <= Minimum {
+	amount, valueAmount, error := isNumeric(investment)
+	if error != nil {
+		return valueAmount, error
+	}
+
+	is_multiple, _, _ := isMulti(amount, 100)
+	if !is_multiple || amount < Minimum {
+		isValidate = false
+		if amount <= Minimum {
 			err.Message = "La cantidad no puede ser menos de $" + strconv.Itoa(int(Minimum))
 		} else {
 			err.Message = "La cantidad no es multiplo de 100, favor de ingresar de nuevo"
 		}
-		return is_validate, err
+		return isValidate, err
 	}
 
-	return is_validate, nil
+	return isValidate, nil
+}
+
+func isNumeric(amount interface{}) (int, bool, error) {
+	var err GeneralError
+	value, boolValue := amount.(int)
+	if !boolValue {
+		err.Message = "No es un dato numerico"
+		return int(value), boolValue, err
+	}
+	return int(value), boolValue, nil
 }
 
 func ValidateResult() (bool, int) {
@@ -29,7 +44,7 @@ func ValidateResult() (bool, int) {
 	if total_amounts == Investment {
 		return true, 0
 	}
-	return false, total_amounts - Investment
+	return false, total_amounts - Investment.(int)
 }
 
 func isMulti(amount int, multiple interface{}) (bool, int, int) {
