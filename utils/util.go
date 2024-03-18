@@ -1,10 +1,8 @@
 package utils
 
-import "fmt"
-
 func CalculateCreditTypes(investment int) {
 
-	isMultiple, _, n := isMulti(investment, nil)
+	isMultiple, _, n := IsMulti(investment, nil)
 	if isMultiple {
 		addCreditTypes(n, nil)
 	} else {
@@ -23,9 +21,9 @@ func convertToMultiple(investment int) {
 
 func subCalculateCreditTypes(investment int, fixedACreditType int) bool {
 	if investment >= 0 {
-		_, rest, n := isMulti(investment, nil)
+		_, rest, n := IsMulti(investment, nil)
 		for _, creditType := range CreditType {
-			isMultiple, _, nCT := isMulti(rest, creditType)
+			isMultiple, _, nCT := IsMulti(rest, creditType)
 			if isMultiple {
 				incrCreditType(fixedACreditType)
 				addCreditTypes(n, nil)
@@ -60,6 +58,8 @@ func CleanCreditType() {
 
 func GetStatistics(investments []Investment) (total_of_assignemts int, successful_assignments int, unsuccessful_assignments int, average_successful_assignments float32, average_unsuccessful_assignments float32) {
 	total_of_assignemts = len(investments)
+	average_successful_assignments = 0
+	average_unsuccessful_assignments = 0
 
 	var total_amount_successful, total_amount_unsuccessful int
 	for _, investment := range investments {
@@ -75,20 +75,4 @@ func GetStatistics(investments []Investment) (total_of_assignemts int, successfu
 	average_successful_assignments = float32(total_amount_successful) / float32(successful_assignments)
 	average_unsuccessful_assignments = float32(total_amount_unsuccessful) / float32(unsuccessful_assignments)
 	return
-}
-
-func PrintDivider() {
-	fmt.Println("-----------------------------------")
-}
-
-func PrintResult(investment int) {
-	var total_amounts int
-	fmt.Println("El monto de inversion fue: $", investment)
-	for key, value := range CountCreditType {
-		total := (key * value)
-		total_amounts += int(total)
-		fmt.Println("Monto de $", key, " x ", value, " = $", total)
-	}
-	PrintDivider()
-	fmt.Println("Un total de --------> = $", total_amounts)
 }

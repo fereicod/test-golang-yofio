@@ -1,6 +1,8 @@
 package utils
 
-import "strconv"
+import (
+	"strconv"
+)
 
 type InvestmentReq struct {
 	Amount int `json:"investment"`
@@ -12,9 +14,7 @@ func (i InvestmentReq) CreditAssigner(investment int32) (int32, int32, int32, er
 	CalculateCreditTypes(int(investment))
 
 	success, diffAmount := ValidateResult(int(investment))
-	if success {
-		PrintResult(int(investment))
-	} else {
+	if !success {
 		err.Message = "Error " + strconv.Itoa(int(diffAmount)) + " to be distributed."
 		return 0, 0, 0, err
 	}

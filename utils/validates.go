@@ -1,6 +1,6 @@
 package utils
 
-func isMulti(a int, b interface{}) (bool, int, int) {
+func IsMulti(a int, b interface{}) (bool, int, int) {
 	if b == nil {
 		var min int
 		for _, creditType := range CreditType {
