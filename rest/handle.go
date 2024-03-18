@@ -36,7 +36,6 @@ func ProcessInvestment(w http.ResponseWriter, r *http.Request, database *sql.DB)
 
 	errorAssigner := utils.GeneralError{}
 	if investment.Amount > 0 {
-		utils.PrintDivider()
 		investment_req := utils.InvestmentReq{}
 		credit_type_300, credit_type_500, credit_type_700, errorAssigner := investment_req.CreditAssigner(int32(investment.Amount))
 
@@ -121,10 +120,8 @@ func GetStatistics(w http.ResponseWriter, database *sql.DB) {
 		return
 	}
 
-	// Send response to the client
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(statistics)
 
-	//return users
 }
