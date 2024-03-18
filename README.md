@@ -52,3 +52,6 @@ Using curl will be something like this.
 ```bash
     curl http://localhost:3690/statistics
 ```
+## Example
+![investment](https://github.com/fereicod/test-golang-yofio/assets/6632994/a57b45a7-6754-4b6f-a1ef-45e037d81db4)
+![statistics](https://github.com/fereicod/test-golang-yofio/assets/6632994/02b5114f-f0c7-4a5e-93d0-7e6226d25d97)
