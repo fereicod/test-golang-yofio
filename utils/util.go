@@ -2,76 +2,89 @@ package utils
 
 import "fmt"
 
-func CalculateAmounts(investment int) {
+func CalculateCreditTypes(investment int) {
 
-	is_multiple, rest, n := isMulti(investment, nil)
-	if !is_multiple {
-		exists := existsInProportional(rest)
-		if exists {
-			incrProportional(rest)
-			allocateAmounts(n, nil)
-		} else {
-			toMultiple(investment)
-		}
+	isMultiple, _, n := isMulti(investment, nil)
+	if isMultiple {
+		addCreditTypes(n, nil)
 	} else {
-		allocateAmounts(n, nil)
+		convertToMultiple(investment)
 	}
 }
 
-func toMultiple(amount int) {
-	for _, value := range Porportional {
-		success := subCalculateAmounts(amount-value, value)
+func convertToMultiple(investment int) {
+	for _, creditType := range CreditType {
+		success := subCalculateCreditTypes(investment-creditType, creditType)
 		if success {
 			break
 		}
 	}
 }
 
-func subCalculateAmounts(amount int, value int) bool {
-
-	_, rest_origin, n_origin := isMulti(amount, nil)
-	for _, val := range Porportional {
-		is_multiple, _, n := isMulti(rest_origin, val)
-		if is_multiple {
-			incrProportional(value)
-			allocateAmounts(n_origin, nil)
-			allocateAmounts(n, val)
-			return true
+func subCalculateCreditTypes(investment int, fixedACreditType int) bool {
+	if investment >= 0 {
+		_, rest, n := isMulti(investment, nil)
+		for _, creditType := range CreditType {
+			isMultiple, _, nCT := isMulti(rest, creditType)
+			if isMultiple {
+				incrCreditType(fixedACreditType)
+				addCreditTypes(n, nil)
+				addCreditTypes(nCT, creditType)
+				return true
+			}
 		}
 	}
 	return false
 }
 
-func allocateAmounts(n int, fixedAmount interface{}) {
+func addCreditTypes(n int, fixedACreditType interface{}) {
 	for n > 0 {
-		if fixedAmount != nil {
-			incrProportional(fixedAmount.(int))
+		if fixedACreditType != nil {
+			incrCreditType(fixedACreditType.(int))
 		} else {
-			for _, amount := range Porportional {
-				incrProportional(amount)
+			for _, creditType := range CreditType {
+				incrCreditType(creditType)
 			}
 		}
 		n--
 	}
 }
 
-func incrProportional(amount int) {
-	CountAmount[int32(amount)] += 1
+func incrCreditType(creditType int) {
+	CountCreditType[int32(creditType)] += 1
 }
 
-func CleanProcess() {
-	Investment = 0
-	CountAmount = map[int32]int32{}
+func CleanCreditType() {
+	CountCreditType = map[int32]int32{}
+}
+
+func GetStatistics(investments []Investment) (total_of_assignemts int, successful_assignments int, unsuccessful_assignments int, average_successful_assignments float32, average_unsuccessful_assignments float32) {
+	total_of_assignemts = len(investments)
+
+	var total_amount_successful, total_amount_unsuccessful int
+	for _, investment := range investments {
+		if investment.Processed {
+			successful_assignments += 1
+			total_amount_successful += investment.Investment
+		} else {
+			unsuccessful_assignments += 1
+			total_amount_unsuccessful += investment.Investment
+		}
+	}
+
+	average_successful_assignments = float32(total_amount_successful) / float32(successful_assignments)
+	average_unsuccessful_assignments = float32(total_amount_unsuccessful) / float32(unsuccessful_assignments)
+	return
 }
 
 func PrintDivider() {
 	fmt.Println("-----------------------------------")
 }
 
-func PrintResult() {
+func PrintResult(investment int) {
 	var total_amounts int
-	fmt.Println("El monto de inversion fue: $", Investment)
-	for key, value := range CountAmount {
+	fmt.Println("El monto de inversion fue: $", investment)
+	for key, value := range CountCreditType {
 		total := (key * value)
 		total_amounts += int(total)
 		fmt.Println("Monto de $", key, " x ", value, " = $", total)

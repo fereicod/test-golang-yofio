@@ -1,0 +1,13 @@
+### Get statistics
+GET http://localhost:3690/statistics
+
+
+### Post investment
+//POST http://3.15.170.119:3690/credit-assignment
+POST http://localhost:3690/credit-assignment
+Content-Type: application/json
+
+{
+    "investment": 1000
+}
+
